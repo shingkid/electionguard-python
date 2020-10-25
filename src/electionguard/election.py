@@ -9,7 +9,7 @@ from .group import Q, P, R, G, ElementModQ, ElementModP
 from .hash import CryptoHashable, hash_elems
 from .logs import log_warning
 from .serializable import Serializable
-from .utils import get_optional
+from .utils import get_optional, to_ticks
 
 
 @unique
@@ -175,7 +175,7 @@ class GeopoliticalUnit(ElectionObjectBase, CryptoHashable):
         A hash representation of the object
         """
         return hash_elems(
-            self.object_id, self.name, str(self.type), self.contact_information
+            self.object_id, self.name, str(self.type.name), self.contact_information
         )
 
 
@@ -363,7 +363,7 @@ class ContestDescription(ElectionObjectBase, CryptoHashable):
             self.object_id,
             self.sequence_order,
             self.electoral_district_id,
-            str(self.vote_variation),
+            str(self.vote_variation.name),
             self.ballot_title,
             self.ballot_subtitle,
             self.name,
@@ -566,13 +566,12 @@ class ElectionDescription(Serializable, CryptoHashable):
 
         return hash_elems(
             self.election_scope_id,
-            str(self.type),
-            self.start_date.isoformat(),
-            self.end_date.isoformat(),
+            str(self.type.name),
+            to_ticks(self.start_date),
+            to_ticks(self.end_date),
             self.name,
             self.contact_information,
             self.geopolitical_units,
-            self.parties,
             self.parties,
             self.contests,
             self.ballot_styles,
